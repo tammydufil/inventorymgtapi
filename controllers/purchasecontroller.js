@@ -35,7 +35,9 @@ const getAllPurchases = async (req, res) => {
       const materials = purchase.materials.split(",");
       const quantities = purchase.quantities.split(",");
       const uploadedBy = purchase.uploaded_by.split(",");
-      const dates = purchase.dates.split(",");
+      const dates = purchase.dates
+        ? purchase.dates.toISOString().split("T")
+        : [];
 
       const purchases = ids.map((id, index) => ({
         id,
