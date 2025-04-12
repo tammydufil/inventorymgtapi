@@ -17,7 +17,7 @@ const {
   getMaterialStats,
   getLowAndOutOfStockItems,
   getLastFivePurchases,
-} = require("../controllers/materialcontroller");
+} = require("../controllers/materialController");
 const {
   getAllProductTypes,
   getActiveProductTypes,
