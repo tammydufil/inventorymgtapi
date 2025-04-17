@@ -53,7 +53,6 @@ const createRequisition = async (req, res) => {
     return res.status(500).json({ message: "Internal server error." });
   }
 };
-
 const getPendingApprovals = async (req, res) => {
   const { userId } = req.body;
 
@@ -109,7 +108,6 @@ const getPendingApprovals = async (req, res) => {
     });
   }
 };
-
 const approveOrRejectRequest = async (req, res) => {
   const { reqid, action } = req.body;
 
@@ -136,7 +134,7 @@ const approveOrRejectRequest = async (req, res) => {
       for (const item of requisitionItems) {
         await sequelize.query(
           `UPDATE materials
-             SET value = value + ?
+             SET value = value - ?
              WHERE name = ?`,
           {
             replacements: [item.quantity, item.material],
@@ -168,7 +166,6 @@ const approveOrRejectRequest = async (req, res) => {
     });
   }
 };
-
 const getApprovalsByDateRange = async (req, res) => {
   const { userId, startDate, endDate } = req.body;
 
@@ -309,7 +306,6 @@ const getMyApprovalsByDateRange = async (req, res) => {
     });
   }
 };
-
 const getAllApprovalsByDateRange = async (req, res) => {
   const { startDate, endDate } = req.body;
 
