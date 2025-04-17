@@ -37,6 +37,7 @@ const {
   approveOrRejectRequest,
   getApprovalsByDateRange,
   getAllApprovalsByDateRange,
+  getMyApprovalsByDateRange,
 } = require("../controllers/requisitioncontroller");
 
 const {
@@ -102,6 +103,7 @@ router.post("/getPendingApprovals", getPendingApprovals);
 router.post("/approveOrRejectRequest", approveOrRejectRequest);
 router.post("/getApprovalsByDateRange", getApprovalsByDateRange);
 router.post("/getAllApprovalsByDateRange", getAllApprovalsByDateRange);
+router.post("/getMyApprovalsByDateRange", getMyApprovalsByDateRange);
 
 // Requisiton end
 

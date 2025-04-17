@@ -194,6 +194,80 @@ const getApprovalsByDateRange = async (req, res) => {
       }
     );
 
+    console.log(approvals);
+
+    if (approvals.length === 0) {
+      return res.status(404).json({
+        message: "No approvals found for the given date range.",
+      });
+    }
+
+    // Grouping by reqid
+    const grouped = approvals.reduce((acc, item) => {
+      if (!acc[item.reqid]) {
+        acc[item.reqid] = {
+          reqid: item.reqid,
+          approval: item.approval,
+          status: item.status,
+          sentby: item.sentby,
+          sentbyname: item.sentbyname,
+          date: item.date,
+          items: [],
+        };
+      }
+      acc[item.reqid].items.push({
+        id: item.id,
+        category: item.category,
+        material: item.material,
+        quantity: item.quantity,
+        note: item.note,
+      });
+      return acc;
+    }, {});
+
+    // Convert object to array and return the response
+    const groupedArray = Object.values(grouped);
+
+    return res.status(200).json(groupedArray);
+  } catch (error) {
+    console.error("Error fetching approvals:", error);
+    return res.status(500).json({
+      message: "Server Error. Could not fetch approvals.",
+      error: error.message,
+    });
+  }
+};
+const getMyApprovalsByDateRange = async (req, res) => {
+  const { userId, startDate, endDate } = req.body;
+
+  // Basic validation
+  if (!userId || !startDate || !endDate) {
+    return res.status(400).json({
+      message: "Missing required parameters: userId, startDate, endDate",
+    });
+  }
+
+  try {
+    const approvals = await sequelize.query(
+      `
+         SELECT 
+            r.id, r.reqid, r.category, r.material, r.quantity, r.note, 
+            r.approval, r.status, r.sentby, r.sentbyname, r.date,
+            u.Fullname AS Fullname
+          FROM requisition r
+          LEFT JOIN users u ON u.email = r.approval
+          WHERE r.sentby = :userId and DATE(r.date) BETWEEN :startDate AND :endDate
+          ORDER BY r.date DESC
+        `,
+
+      {
+        replacements: { userId, startDate, endDate },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+
+    console.log(approvals);
+
     if (approvals.length === 0) {
       return res.status(404).json({
         message: "No approvals found for the given date range.",
@@ -311,4 +385,5 @@ module.exports = {
   approveOrRejectRequest,
   getApprovalsByDateRange,
   getAllApprovalsByDateRange,
+  getMyApprovalsByDateRange,
 };

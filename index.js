@@ -16,7 +16,7 @@ app.use(cors());
 const generalRoute = require("./routes/generalRoute.js");
 const authenticateUser = require("./middleware/auth.js");
 
-app.use(authenticateUser);
+// app.use(authenticateUser);
 
 app.use("/inventorymgtapi/api/", generalRoute);
 
